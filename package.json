@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx  -r dotenv/config scripts/ingest-data.ts && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "ingest": "tsx  -r dotenv/config scripts/ingest-data.ts"
   },
   "dependencies": {
     "axios": "^1.6.5",
