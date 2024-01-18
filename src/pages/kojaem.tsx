@@ -13,6 +13,10 @@ const Kojaem = () => {
   const firstChain = async () => {
     await axios.get("/api/firstChain");
   };
+
+  const retrieval = async () => {
+    await axios.get("/api/retrieval");
+  };
   
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -24,6 +28,9 @@ const Kojaem = () => {
       </div>
       <div className="border border-blue-400 w-fit p-2 rounded-full">
         <button onClick={firstChain}>{`firstChain 버튼`}</button>
+      </div>
+      <div className="border border-blue-400 w-fit p-2 rounded-full">
+        <button onClick={retrieval}>{`retrieval 버튼`}</button>
       </div>
     </div>
   );
