@@ -3,7 +3,7 @@ import React from 'react'
 
 const Kojaem = () => {
   const supabase = async() => {
-    await axios.get("/api/langchain");
+    await axios.get("/api/supabase");
   }
 
   const promptTemplate = async() => {
