@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next/types";
 import { createClient } from "@supabase/supabase-js";
 import { SupabaseVectorStore } from "langchain/vectorstores/supabase";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
-
+// supabase 에 올리는 작업
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

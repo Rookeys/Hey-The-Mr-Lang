@@ -2,8 +2,7 @@ import { ChatOpenAI } from '@langchain/openai'
 import { PromptTemplate } from '@langchain/core/prompts'
 import { NextApiRequest, NextApiResponse } from 'next';
 
-
-
+// 프롬프트 템플릿 사용법
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
