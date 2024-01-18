@@ -23,7 +23,11 @@ export default async function handler(
     const sbUrl = process.env.SUPABASE_URL;
     const openAIApiKey = process.env.OPENAI_API_KEY;
 
-    if (!sbApiKey || !sbUrl) return;
+    if (!sbApiKey || !sbUrl) {
+      res.status(401).json({ message: "Don't have permissions on supabase." });
+      return;
+    }
+
     const client = createClient(sbUrl, sbApiKey);
 
     const output = await splitter.createDocuments([result]); // 여러 파일을 나누는것도 가능 (배열에 추가하면 됨)
