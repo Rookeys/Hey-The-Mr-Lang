@@ -3,7 +3,7 @@ I live in Incheon, South Korea. My birthday is November 29, 1998.
 
 I'm currently working in a front-end position at a CloudHospital company.
 
-I graduated from the Department of Computer Science at Hanse University.
+I graduated from the Department of Computer Science at Hansei University.
 
 I'm very interested in UI/UX and enjoy developing.
 I'm also interested in Flutter and have been studying it a bit after work.
