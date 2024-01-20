@@ -1,10 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { object, string } from "yup";
 
 const Kojaem = () => {
+
+  const [history, setHistory] = useState<string>('');
+
   const supabase = async () => {
     await axios.get("/api/supabase");
   };
@@ -50,16 +53,24 @@ const Kojaem = () => {
 
       resetField("question");
 
+      setHistory(prev => prev + `Human: ${question}`);
+
       const { data: response } = await axios.post("/api/test", {
         question,
+        history,
       });
 
-      console.log('response:', response);
+      setHistory(prev => prev + `AI: ${response}`);
 
+      console.log("response:", response);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log(history);
+  }, [history])
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">

@@ -15,7 +15,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { question } = req.body;
+    const { question, history } = req.body;
 
     //only accept post requests
     if (req.method !== "POST") {
@@ -30,14 +30,18 @@ export default async function handler(
     const openAIApiKey = process.env.OPENAI_API_KEY;
     const llm = new ChatOpenAI({ openAIApiKey });
 
-    const standaloneQuestionTemplate =
-      "Given a question, convert it to a standalone question. question: {question} standalone question:";
+    const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
+conversation history: {history}
+question: {question} 
+standalone question:`;
+
     const standaloneQuestionPrompt = PromptTemplate.fromTemplate(
       standaloneQuestionTemplate
     );
 
-    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about KoJaem based on the context provided. Try to find the answer in the context. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." And direct the questioner to email woalswhwh@gmail.com. Don't try to make up an answer. Always speak as if you were chatting to a friend.
+    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about KoJaem based on the context provided and the conversation history. Try to find the answer in the context. If the answer is not given in the context, find the answer in the conversation history if possible. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." And direct the questioner to email woalswhwh@gmail.com. Don't try to make up an answer. Always speak as if you were chatting to a friend.
 context: {context}
+conversation history: {history}
 question: {question}
 answer: `;
     const answerPrompt = PromptTemplate.fromTemplate(answerTemplate);
@@ -61,12 +65,14 @@ answer: `;
       {
         context: retrieverChain,
         question: ({ original_input }) => original_input.question,
+        history: ({ original_input }) => original_input.history,
       },
       answerChain,
     ]);
 
     const response = await chain.invoke({
       question,
+      history,
     });
 
     res.status(200).json(response);
