@@ -33,7 +33,9 @@ export default async function handler(
 
     const answerPrompt = PromptTemplate.fromTemplate(answerTemplate)
 
-    const chain = standaloneQuestionPrompt.pipe(llm).pipe(new StringOutputParser()).pipe(retrieverValue).pipe(combineDocuments).pipe(answerPrompt)
+    const chain = standaloneQuestionPrompt.pipe(llm).pipe(new StringOutputParser()).pipe(retrieverValue)
+    // const chain = standaloneQuestionPrompt.pipe(llm).pipe(new StringOutputParser()).pipe(retrieverValue).pipe(combineDocuments).pipe(answerPrompt)
+
 
 
     const response = await chain.invoke({

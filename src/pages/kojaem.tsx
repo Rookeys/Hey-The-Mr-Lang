@@ -17,6 +17,10 @@ const Kojaem = () => {
   const retrieval = async () => {
     await axios.get("/api/retrieval");
   };
+
+  const runnableSequence = async () => {
+    await axios.get("/api/runnableSequence");
+  }
   
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -31,6 +35,9 @@ const Kojaem = () => {
       </div>
       <div className="border border-blue-400 w-fit p-2 rounded-full">
         <button onClick={retrieval}>{`retrieval 버튼`}</button>
+      </div>
+      <div className="border border-blue-400 w-fit p-2 rounded-full">
+        <button onClick={runnableSequence}>{`runnableSequence 버튼`}</button>
       </div>
     </div>
   );
