@@ -1,3 +1,4 @@
+// 전체적으로 정리된 파일
 import { combineDocuments } from "@/utils/combineDocuments";
 import { retriever } from "@/utils/retriever";
 import { StringOutputParser } from "@langchain/core/output_parsers";
@@ -28,7 +29,10 @@ export default async function handler(
     }
 
     const openAIApiKey = process.env.OPENAI_API_KEY;
-    const llm = new ChatOpenAI({ openAIApiKey });
+    const llm = new ChatOpenAI({
+      openAIApiKey,
+      temperature: 0, // 제공된 데이터 기반으로 사용할건지에 대한 값 (적을수록 제공된 데이터 기반으로 대답 / 높을수록 창의성있게 대답)
+    });
 
     const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
 conversation history: {history}

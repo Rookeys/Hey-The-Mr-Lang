@@ -22,7 +22,7 @@ export const retriever = () => {
     queryName: 'match_documents'
   })
 
-  const retriever = vectorStore.asRetriever()
+  const retriever = vectorStore.asRetriever() // 몇개의 청크를 가져올건지 숫자를 넣을 수 있음 default: 4
 
   return retriever
 }
