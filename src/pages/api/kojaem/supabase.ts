@@ -43,6 +43,7 @@ export default async function handler(
     );
 
     // console.log(JSON.stringify(output, null, 2)); // [Object] 출력
+    res.status(200);
   } catch (error) {
     console.log(error);
   }

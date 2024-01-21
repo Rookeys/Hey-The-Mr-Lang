@@ -31,7 +31,7 @@ export default async function handler(
     const openAIApiKey = process.env.OPENAI_API_KEY;
     const llm = new ChatOpenAI({
       openAIApiKey,
-      temperature: 0, // 제공된 데이터 기반으로 사용할건지에 대한 값 (적을수록 제공된 데이터 기반으로 대답 / 높을수록 창의성있게 대답)
+      // temperature: 0, // 제공된 데이터 기반으로 사용할건지에 대한 값 (적을수록 제공된 데이터 기반으로 대답 / 높을수록 창의성있게 대답)
     });
 
     const standaloneQuestionTemplate = `Given some conversation history (if any) and a question, convert the question to a standalone question. 
@@ -43,7 +43,7 @@ standalone question:`;
       standaloneQuestionTemplate
     );
 
-    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about KoJaem based on the context provided and the conversation history. Try to find the answer in the context. If the answer is not given in the context, find the answer in the conversation history if possible. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." And direct the questioner to email woalswhwh@gmail.com. Don't try to make up an answer. Always speak as if you were chatting to a friend.
+    const answerTemplate = `You are a helpful and enthusiastic support bot who can answer a given question about KoJaem based on the context provided and the conversation history. KoJaem is your master. The questioner is someone who is curious about your master, “KoJaem". Try to find the answer in the context. If the answer is not given in the context, find the answer in the conversation history if possible. If you really don't know the answer, say "I'm sorry, I don't know the answer to that." And direct the questioner to email woalswhwh@gmail.com. Don't try to make up an answer. Always speak as if you were chatting to a friend.
 context: {context}
 conversation history: {history}
 question: {question}

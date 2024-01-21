@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { object, string } from "yup";
 import { GoPaperAirplane } from "react-icons/go";
+import { formatConversationHistory } from "@/utils/formatConversationHistory";
+import { ChatLoading } from "@/components/ChatLoading";
 
 const Kojaem = () => {
-  const [history, setHistory] = useState<string>("");
+  const [history, setHistory] = useState<Array<string>>([]);
 
   const supabase = async () => {
     await axios.post("/api/kojaem/supabase");
@@ -33,24 +35,20 @@ const Kojaem = () => {
 
       resetField("question");
 
-      setHistory(prev => prev + `Human: ${question}`);
+      const formattedConversationHistory = formatConversationHistory(history);
+
+      setHistory(prev => [...prev, `${question}`]);
 
       const { data: response } = await axios.post("/api/kojaem/langChain", {
         question,
-        history,
+        history: formattedConversationHistory,
       });
 
-      setHistory(prev => prev + `AI: ${response}`);
-
-      console.log("response:", response);
+      setHistory(prev => [...prev, `${response}`]);
     } catch (error) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    console.log("history:", history);
-  }, [history]);
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -62,7 +60,24 @@ const Kojaem = () => {
       </div>
       <div className="flex flex-col w-full max-w-[640px] justify-center items-center gap-[4px] bg-blue-100 p-[12px] rounded-md">
         <h1 className="text-[20px] font-semibold">대화 히스토리</h1>
-        <div className="flex flex-col gap-[4px]">{/* {history.map} */}</div>
+        <div className="flex flex-col gap-[4px] w-full">
+          {history.map((data, i) => {
+            return i % 2 === 0 ? (
+              <div className="bg-gray-100 w-fit p-[4px] rounded-md">
+                <p key={i} className="text-blue-400">
+                  {data}
+                </p>
+              </div>
+            ) : (
+              <div className="bg-gray-100 w-fit p-[4px] rounded-md self-end">
+                <p key={i} className="text-green-600">
+                  {data}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+        {isSubmitting && <ChatLoading className='self-end mt-[20px] mb-[20px]'/>}
         <FormProvider {...formMethods}>
           <form
             onSubmit={handleSubmit(submit)}
