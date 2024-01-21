@@ -3,33 +3,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
 import { object, string } from "yup";
+import { GoPaperAirplane } from "react-icons/go";
 
 const Kojaem = () => {
-
-  const [history, setHistory] = useState<string>('');
+  const [history, setHistory] = useState<string>("");
 
   const supabase = async () => {
-    await axios.get("/api/supabase");
-  };
-
-  const promptTemplate = async () => {
-    await axios.get("/api/promptTemplate");
-  };
-
-  const firstChain = async () => {
-    await axios.get("/api/firstChain");
-  };
-
-  const retrieval = async () => {
-    await axios.get("/api/retrieval");
-  };
-
-  const runnableSequence = async () => {
-    await axios.get("/api/runnableSequence");
-  };
-
-  const test = async () => {
-    await axios.get("/api/test");
+    await axios.post("/api/kojaem/supabase");
   };
 
   const schema = object().shape({
@@ -55,7 +35,7 @@ const Kojaem = () => {
 
       setHistory(prev => prev + `Human: ${question}`);
 
-      const { data: response } = await axios.post("/api/test", {
+      const { data: response } = await axios.post("/api/kojaem/langChain", {
         question,
         history,
       });
@@ -69,8 +49,8 @@ const Kojaem = () => {
   };
 
   useEffect(() => {
-    console.log(history);
-  }, [history])
+    console.log("history:", history);
+  }, [history]);
 
   return (
     <div className="w-full h-full flex flex-col gap-4 items-center">
@@ -80,44 +60,35 @@ const Kojaem = () => {
           onClick={supabase}
         >{`context -> supabase 버튼`}</button>
       </div>
-      <div className="border border-blue-400 w-fit p-2 rounded-full">
-        <button
-          type="button"
-          onClick={promptTemplate}
-        >{`promptTemplate 버튼`}</button>
+      <div className="flex flex-col w-full max-w-[640px] justify-center items-center gap-[4px] bg-blue-100 p-[12px] rounded-md">
+        <h1 className="text-[20px] font-semibold">대화 히스토리</h1>
+        <div className="flex flex-col gap-[4px]">{/* {history.map} */}</div>
+        <FormProvider {...formMethods}>
+          <form
+            onSubmit={handleSubmit(submit)}
+            className="w-full flex justify-center"
+          >
+            <div className="flex w-full justify-between bg-blue-50 rounded-md p-[2px]">
+              <textarea
+                placeholder={
+                  isSubmitting
+                    ? `요청중입니다... (시간이 걸릴 수 있습니다)`
+                    : "KoJaem 님에 대해 무엇이 궁금하신가요?"
+                }
+                {...register("question")}
+                disabled={isSubmitting}
+                className="resize-none ring-0 outline-none bg-transparent placeholder:text-gray-400 w-full"
+              />
+              <button
+                type="submit"
+                className="w-[20px] flex items-center justify-center"
+              >
+                <GoPaperAirplane />
+              </button>
+            </div>
+          </form>
+        </FormProvider>
       </div>
-      <div className="border border-blue-400 w-fit p-2 rounded-full">
-        <button type="button" onClick={firstChain}>{`firstChain 버튼`}</button>
-      </div>
-      <div className="border border-blue-400 w-fit p-2 rounded-full">
-        <button type="button" onClick={retrieval}>{`retrieval 버튼`}</button>
-      </div>
-      <div className="border border-blue-400 w-fit p-2 rounded-full">
-        <button
-          type="button"
-          onClick={runnableSequence}
-        >{`runnableSequence 버튼`}</button>
-      </div>
-      <div className="border border-blue-400 w-fit p-2 rounded-full">
-        <button type="button" onClick={test}>{`test 버튼`}</button>
-      </div>
-      <FormProvider {...formMethods}>
-        <form
-          onSubmit={handleSubmit(submit)}
-          className="w-full flex justify-center"
-        >
-          <textarea
-            placeholder={
-              isSubmitting
-                ? "Waiting for response..."
-                : "What is this legal case about?"
-            }
-            {...register("question")}
-            disabled={isSubmitting}
-          />
-          <button type="submit">보내기 버튼</button>
-        </form>
-      </FormProvider>
     </div>
   );
 };
