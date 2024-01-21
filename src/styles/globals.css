@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+  height: 100%;
+  line-height: 1.4;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#__next {
+  height: 100%;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -18,10 +34,19 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+}
+@keyframes bubble {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bubble {
+  animation: bubble 1.5s infinite;
 }
