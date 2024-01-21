@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "tsx  -r dotenv/config scripts/ingest-data.ts && next build",
+    "build": "npm run ingest-remote && next build && next export",
     "start": "next start",
     "lint": "next lint",
-    "ingest": "tsx  -r dotenv/config scripts/ingest-data.ts"
+    "ingest-remote": "tsx  -r dotenv/config scripts/ingest-data-remote.ts",
+    "ingest-local": "tsx  -r dotenv/config scripts/ingest-data-local.ts"
   },
   "dependencies": {
     "@langchain/community": "^0.0.17",

@@ -1,9 +1,7 @@
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-
-import { createClient } from '@supabase/supabase-js';
-import { TextLoader } from "langchain/document_loaders/fs/text";
-import { OpenAIEmbeddings } from '@langchain/openai';
+import { getSplittedDocs } from '@/util/getSplittedDocs';
 import { SupabaseVectorStore } from '@langchain/community/vectorstores/supabase';
+import { OpenAIEmbeddings } from '@langchain/openai';
+import { createClient } from "@supabase/supabase-js";
 
 /* Name of directory to retrieve your files from */
 const filePath = 'data/jeongmin-info.txt';
@@ -11,27 +9,20 @@ const filePath = 'data/jeongmin-info.txt';
 export const run = async () => {
   try {
 
-    const loader = new TextLoader(filePath);
-    const rawDocs = await loader.load();
-
-    console.log('file text splitting');
-
-    const textSplitter = new RecursiveCharacterTextSplitter({
+    const docs = await getSplittedDocs({
+      filePath,
       chunkSize: 500,
       chunkOverlap: 100,
-      separators: ['\n\n', '\n', '. ', '? ', '! ', '.\n', '?\n', '!\n']
     })
-
-    const docs = await textSplitter.splitDocuments(rawDocs);
     
-    console.log('checking envrionment variables');
+    console.log('🔍 Checking environment variables\n');
 
     const supabase_api_key = process.env.SUPABASE_API_KEY;
     const sbUrl = process.env.SUPABASE_URL;
     const openAIApiKey = process.env.OPENAI_API_KEY;
     const client = createClient(sbUrl as string, supabase_api_key as string);
 
-    console.log('connecting to supabase')
+    console.log('🔗 Connecting to Supabase\n');
 
       // Check if there is any data in the relevant table
       let { data: existingData, error } = await client.from('documents').select('*').limit(1);
@@ -41,7 +32,7 @@ export const run = async () => {
   
       // If data exists, skip the rest of the process
       if (existingData && existingData.length > 0) {
-        console.log('Data already exists in Supabase, skipping process.');
+        console.log('📚 Data already exists in Supabase, skipping process.\n');
         return;
       }
     
@@ -53,18 +44,13 @@ export const run = async () => {
           tableName: 'documents',
         }
       )
-      console.log('vector data created in Supabase');
+      console.log('🎉 Vector data created in Supabase\n');
 
    
 
   } catch(error) {
-    console.log('error', error);
+    console.log('❌ Error', error);
     throw new Error('Failed to ingest your data');
   }
 
 };
-
-(async () => {
-  await run();
-  console.log('ingestion complete');
-})();
