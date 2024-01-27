@@ -7,5 +7,5 @@ export const formatConversationHistory = (messages: Array<string>) => {
         return `AI: ${message}`;
       }
     })
-    .join("\n");
+    .join("\n ");
 }

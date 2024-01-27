@@ -63,16 +63,15 @@ const Kojaem = () => {
         <div className="flex flex-col gap-[4px] w-full">
           {history.map((data, i) => {
             return i % 2 === 0 ? (
-              <div className="bg-gray-100 w-fit p-[4px] rounded-md">
-                <p key={i} className="text-blue-400">
-                  {data}
-                </p>
+              <div key={i} className="bg-gray-100 w-fit p-[4px] rounded-md">
+                <p className="text-blue-400">{data}</p>
               </div>
             ) : (
-              <div className="bg-gray-100 w-fit p-[4px] rounded-md self-end">
-                <p key={i} className="text-green-600">
-                  {data}
-                </p>
+              <div
+                key={i}
+                className="bg-gray-100 w-fit p-[4px] rounded-md self-end"
+              >
+                <p className="text-green-600">{data}</p>
               </div>
             );
           })}
