@@ -31,6 +31,9 @@ const Kojaem = () => {
 
   const submit = async (data: FieldValues) => {
     try {
+      if (!process.env.NEXT_PUBLIC_LAMBDA_TEST_URL) {
+        return;
+      }
       const question = data.question;
 
       resetField("question");
@@ -39,10 +42,13 @@ const Kojaem = () => {
 
       setHistory(prev => [...prev, `${question}`]);
 
-      const { data: response } = await axios.post("/api/kojaem/langChain", {
-        question,
-        history: formattedConversationHistory,
-      });
+      const { data: response } = await axios.post(
+        process.env.NEXT_PUBLIC_LAMBDA_TEST_URL,
+        {
+          question,
+          history: formattedConversationHistory,
+        }
+      );
 
       setHistory(prev => [...prev, `${response}`]);
     } catch (error) {
@@ -76,7 +82,9 @@ const Kojaem = () => {
             );
           })}
         </div>
-        {isSubmitting && <ChatLoading className='self-end mt-[20px] mb-[20px]'/>}
+        {isSubmitting && (
+          <ChatLoading className="self-end mt-[20px] mb-[20px]" />
+        )}
         <FormProvider {...formMethods}>
           <form
             onSubmit={handleSubmit(submit)}
