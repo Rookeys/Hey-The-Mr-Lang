@@ -1,11 +1,11 @@
+import { ChatLoading } from "@/components/ChatLoading";
+import { formatConversationHistory } from "@/utils/formatConversationHistory";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { FieldValues, FormProvider, useForm } from "react-hook-form";
-import { object, string } from "yup";
 import { GoPaperAirplane } from "react-icons/go";
-import { formatConversationHistory } from "@/utils/formatConversationHistory";
-import { ChatLoading } from "@/components/ChatLoading";
+import { object, string } from "yup";
 
 const Kojaem = () => {
   const [history, setHistory] = useState<Array<string>>([]);
@@ -31,9 +31,9 @@ const Kojaem = () => {
 
   const submit = async (data: FieldValues) => {
     try {
-      if (!process.env.NEXT_PUBLIC_LAMBDA_TEST_URL) {
-        return;
-      }
+      // if (!process.env.NEXT_PUBLIC_LAMBDA_TEST_URL) {
+      //   return;
+      // }
       const question = data.question;
 
       resetField("question");
@@ -43,7 +43,7 @@ const Kojaem = () => {
       setHistory(prev => [...prev, `${question}`]);
 
       const { data: response } = await axios.post(
-        process.env.NEXT_PUBLIC_LAMBDA_TEST_URL,
+        process.env.NEXT_PUBLIC_LAMBDA_TEST_URL ?? "/api/kojaem/langChain",
         {
           question,
           history: formattedConversationHistory,
@@ -53,6 +53,7 @@ const Kojaem = () => {
       setHistory(prev => [...prev, `${response}`]);
     } catch (error) {
       console.log(error);
+      setHistory(prev => [...prev, '서버가 불안정합니다. 잠시 후 다시 질문 해주세요.'])
     }
   };
 
@@ -69,13 +70,13 @@ const Kojaem = () => {
         <div className="flex flex-col gap-[4px] w-full">
           {history.map((data, i) => {
             return i % 2 === 0 ? (
-              <div key={i} className="bg-gray-100 w-fit p-[4px] rounded-md">
+              <div key={i} className="bg-gray-100 w-fit p-[4px] rounded-md mr-[20%]">
                 <p className="text-blue-400">{data}</p>
               </div>
             ) : (
               <div
                 key={i}
-                className="bg-gray-100 w-fit p-[4px] rounded-md self-end"
+                className="bg-gray-100 w-fit p-[4px] rounded-md self-end ml-[20%]"
               >
                 <p className="text-green-600">{data}</p>
               </div>
@@ -103,6 +104,7 @@ const Kojaem = () => {
               />
               <button
                 type="submit"
+                disabled={isSubmitting}
                 className="w-[20px] flex items-center justify-center"
               >
                 <GoPaperAirplane />
